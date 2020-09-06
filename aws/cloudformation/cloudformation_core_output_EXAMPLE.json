@@ -1,0 +1,96 @@
+{
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:eu-central-1:575950781373:stack/FocusMicroservicesStack/7d3b1130-ee0d-11ea-bd51-06ae1eaa5914",
+            "StackName": "FocusMicroservicesStack",
+            "Description": "This stack deploys the core network infrastructure and IAM resources to be used for a service hosted in Amazon ECS using AWS Fargate.",
+            "CreationTime": "2020-09-03T17:47:09.355000+00:00",
+            "RollbackConfiguration": {},
+            "StackStatus": "CREATE_COMPLETE",
+            "DisableRollback": false,
+            "NotificationARNs": [],
+            "Capabilities": [
+                "CAPABILITY_NAMED_IAM"
+            ],
+            "Outputs": [
+                {
+                    "OutputKey": "CurrentAccount",
+                    "OutputValue": "575950781373",
+                    "Description": "MY_CUSTOM_REFERENCE_ACCOUNT_ID",
+                    "ExportName": "FocusMicroservicesStack:CurrentAccount"
+                },
+                {
+                    "OutputKey": "FargateContainerSecurityGroup",
+                    "OutputValue": "sg-0be60785ed7cbaaa8",
+                    "Description": "MY_CUSTOM_REFERENCE_SECURITY_GROUP_ID",
+                    "ExportName": "FocusMicroservicesStack:FargateContainerSecurityGroup"
+                },
+                {
+                    "OutputKey": "PublicSubnetOne",
+                    "OutputValue": "subnet-0466c024c12a772db",
+                    "Description": "MY_CUSTOM_REFERENCE_PUBLIC_SUBNET_ONE",
+                    "ExportName": "FocusMicroservicesStack:PublicSubnetOne"
+                },
+                {
+                    "OutputKey": "ECSTaskRole",
+                    "OutputValue": "arn:aws:iam::575950781373:role/FocusMicroservicesStack-ECSTaskRole-1T3ZTX042THPL",
+                    "Description": "MY_CUSTOM_REFERENCE_ECS_TASK_ROLE_ARN",
+                    "ExportName": "FocusMicroservicesStack:ECSTaskRole"
+                },
+                {
+                    "OutputKey": "PrivateSubnetTwo",
+                    "OutputValue": "subnet-0099a1bbd905cb625",
+                    "Description": "MY_CUSTOM_REFERENCE_PRIVATE_SUBNET_TWO",
+                    "ExportName": "FocusMicroservicesStack:PrivateSubnetTwo"
+                },
+                {
+                    "OutputKey": "CurrentRegion",
+                    "OutputValue": "eu-central-1",
+                    "Description": "MY_CUSTOM_REFERENCE_REGION",
+                    "ExportName": "FocusMicroservicesStack:CurrentRegion"
+                },
+                {
+                    "OutputKey": "VPCId",
+                    "OutputValue": "vpc-02b589606137b5182",
+                    "Description": "MY_CUSTOM_REFERENCE_VPC_ID",
+                    "ExportName": "FocusMicroservicesStack:VPCId"
+                },
+                {
+                    "OutputKey": "PublicSubnetTwo",
+                    "OutputValue": "subnet-0fbe7d643bb5ed48c",
+                    "Description": "MY_CUSTOM_REFERENCE_PUBLIC_SUBNET_TWO",
+                    "ExportName": "FocusMicroservicesStack:PublicSubnetTwo"
+                },
+                {
+                    "OutputKey": "CodeBuildRole",
+                    "OutputValue": "arn:aws:iam::575950781373:role/REPMEFocusServiceCodeBuildServiceRole",
+                    "Description": "MY_CUSTOM_REFERENCE_CODEBUILD_ROLE_ARN",
+                    "ExportName": "FocusMicroservicesStack:REPMEFocusServiceCodeBuildServiceRole"
+                },
+                {
+                    "OutputKey": "CodePipelineRole",
+                    "OutputValue": "arn:aws:iam::575950781373:role/REPMEFocusServiceCodePipelineServiceRole",
+                    "Description": "MY_CUSTOM_REFERENCE_CODEPIPELINE_ROLE_ARN",
+                    "ExportName": "FocusMicroservicesStack:REPMEFocusServiceCodePipelineServiceRole"
+                },
+                {
+                    "OutputKey": "EcsServiceRole",
+                    "OutputValue": "arn:aws:iam::575950781373:role/FocusMicroservicesStack-EcsServiceRole-D023XL7C507X",
+                    "Description": "MY_CUSTOM_REFERENCE_ECS_SERVICE_ROLE_ARN",
+                    "ExportName": "FocusMicroservicesStack:EcsServiceRole"
+                },
+                {
+                    "OutputKey": "PrivateSubnetOne",
+                    "OutputValue": "subnet-0415fc311b0bf6389",
+                    "Description": "MY_CUSTOM_REFERENCE_PRIVATE_SUBNET_ONE",
+                    "ExportName": "FocusMicroservicesStack:PrivateSubnetOne"
+                }
+            ],
+            "Tags": [],
+            "EnableTerminationProtection": false,
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        }
+    ]
+}

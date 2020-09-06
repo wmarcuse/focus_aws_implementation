@@ -1,0 +1,70 @@
+<html>
+  <head>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type=text/javascript>
+            $(function() {
+              $('a#ctrue').bind('click', function() {
+                $.getJSON('/message_broker_trigger_awesome_true',
+                    function(data) {
+                  //do nothing
+                });
+                setTimeout(function (){
+
+                  location.reload();
+
+                }, 2500);
+
+                return false;
+              });
+            });
+    </script>
+    <script type=text/javascript>
+            $(function() {
+              $('a#cfalse').bind('click', function() {
+                $.getJSON('/message_broker_trigger_awesome_false',
+                    function(data) {
+                  //do nothing
+                });
+                setTimeout(function (){
+
+                  location.reload();
+
+                }, 2500);
+
+                return false;
+              });
+            });
+    </script>
+  </head>
+  <body>
+  <h1>Frontend Service Page</h1>
+     <div id='response'>
+
+
+            {% for item in data %}
+                <h3>Remote DynamoDB Record:</h3>
+                <ul>
+                    <li>model_id: {{item.modelId}}</li>
+                    <li>name: {{item.name}}</li>
+                    <li>created: {{item.createdAt}}</li>
+                    <li>training_accuracy: {{item.trainingAccuracy}}</li>
+                    <li style="color: #38bb00;">AWESOMENESS: {{item.isThisAwesome}}</li>
+                    <li>S3 Bucket: {{item.bucketUri}}</li>
+                </ul>
+            {% endfor %}
+
+     </div>
+  <div class='container'>
+    <h3>Change Awesomeness to True</h3>
+        <form>
+            <a href=# id="ctrue"><button class='btn btn-default'>Everything is awesome</button></a>
+        </form>
+      </br>
+    <h3>Change Awesomeness to False</h3>
+        <form>
+            <a href=# id="cfalse"><button class='btn btn-default'>Everything is not awesome</button></a>
+        </form>
+
+</div>
+  </body>
+</html>

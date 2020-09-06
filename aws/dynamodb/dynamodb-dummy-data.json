@@ -1,0 +1,58 @@
+{
+      "REPMEFocusCustomTable" : [
+         {
+            "PutRequest": {
+               "Item": {
+                  "modelId" : {
+                     "S": "4c31920c-505x-4a90-a694-b7250791f0af"
+                  },
+                  "name" : {
+                     "S": "client_x_model"
+                  },
+                  "type": {
+                     "S": "model"
+                  },
+                  "createdAt" : {
+                     "S": "2020-09-04T07:30:31+0200"
+                  },
+                  "bucketUri" : {
+                     "S": "s3://my-awesome-slug"
+                  },
+                  "trainingAccuracy" : {
+                     "N": "86"
+                  },
+                  "isThisAwesome": {
+                    "BOOL": true
+                  }
+               }
+            }
+         },
+         {
+            "PutRequest": {
+               "Item": {
+                  "modelId" : {
+                     "S": "8b937352c-303g-9a70-f173-b7250791f0gx"
+                  },
+                  "name" : {
+                     "S": "client_y_model"
+                  },
+                  "type": {
+                     "S": "model"
+                  },
+                  "createdAt" : {
+                     "S": "2020-09-04T07:30:32+0200"
+                  },
+                  "bucketUri" : {
+                     "S": "s3://my-other-awesome-slug"
+                  },
+                  "trainingAccuracy" : {
+                     "N": "92"
+                  },
+                  "isThisAwesome": {
+                    "BOOL": false
+                  }
+               }
+            }
+         }
+      ]
+}
