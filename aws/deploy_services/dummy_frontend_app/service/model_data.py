@@ -5,6 +5,10 @@ import logging
 from collections import defaultdict
 from uuid import uuid4
 
+
+# Model data fetcher object responsible for sending a readModel event,
+# creating a specific ID bound callback queue (tunnel) and listen
+# There for the response
 class ModelDataFetcher:
     def __init__(self):
         self.fetched_read_model_data = None
@@ -28,12 +32,23 @@ class ModelDataFetcher:
 
         return model_list
 
+    # This method is called when the callback tunnel queue receives the
+    # requested model data
     def on_message(self, channel, basic_deliver, properties, body):
+        # Parse the message body that is received in the callback queue
         response = json.loads(body)
+
+        # Make the DynamoDB data readable
         self.fetched_read_model_data = self.get_model_data(response['Items'])
+
+        # Acknowledge the message to RabbitMQ
+        channel.basic_ack(delivery_tag=basic_deliver.delivery_tag)
+
+        # Close the consumer channel from the get_all_models() method
         channel.close()
 
-    # This method is used at the frontend service /models page.
+    # This method is used at the frontend service /models page on loading the page
+    # with every load of refresh the data is fetched via the backend service
     def get_all_models(self):
         if os.environ.get('AWS_APP_CONTEXT') == 'DEVELOPMENT_MACHINE':
             # Local testing RabbitMQ credentials
@@ -44,6 +59,8 @@ class ModelDataFetcher:
             credentials = pika.PlainCredentials('rmmdazid', '9JK3bJRNEPAYz5sYFk8v3HQdbx7m-BFO')
             parameters = pika.ConnectionParameters('sparrow.rmq.cloudamqp.com/rmmdazid', credentials=credentials)
         connection = pika.BlockingConnection(parameters)
+
+        # Assign producer channel and set exchange
         channel_p = connection.channel()
         channel_p.exchange_declare(
             exchange="model_exchange",
@@ -55,12 +72,15 @@ class ModelDataFetcher:
         # Assign unique id for unique callback queue tunnel
         specific_callback_id = str(uuid4())
 
+        # Assign consumer channel and callback queue (tunnel)
         channel_c = connection.channel()
         queue_name = 'callback_{ID}'.format(ID=specific_callback_id)
         channel_c.queue_declare(
             queue=queue_name,
             auto_delete=False
         )
+
+        # Bind the callback queue to the callback id and exchange
         channel_c.queue_bind(
             queue=queue_name,
             exchange='model_exchange',
@@ -68,7 +88,7 @@ class ModelDataFetcher:
         )
         channel_c.basic_qos(prefetch_count=1)
 
-        # Publish the READ request on the broker
+        # Publish the readModel request to the broker
         channel_p.basic_publish(
             exchange='model_exchange',
             routing_key='dynamodb.model.crud',
@@ -79,14 +99,19 @@ class ModelDataFetcher:
                 }
             }),
             properties=pika.BasicProperties(content_type='application/json', delivery_mode=1))
+
+        # Close the producer channel
         channel_p.close()
 
-
+        # Start listening to the callback queue, waiting for the
+        # readModel data to arrive
         channel_c.basic_consume(
             queue=queue_name,
             on_message_callback=self.on_message
         )
         channel_c.start_consuming()
+
+        # Close the connection
         connection.close()
 
 

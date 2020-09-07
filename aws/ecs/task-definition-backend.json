@@ -1,0 +1,26 @@
+{
+  "family": "REPMEFocusBackend",
+  "cpu": "256",
+  "memory": "512",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "executionRoleArn": "MY_CUSTOM_REFERENCE_ECS_SERVICE_ROLE_ARN",
+  "taskRoleArn": "MY_CUSTOM_REFERENCE_ECS_TASK_ROLE_ARN",
+  "containerDefinitions": [
+    {
+      "name": "REPMEFocusBackend-Service",
+      "image": "575950781373.dkr.ecr.eu-central-1.amazonaws.com/focus/backend:latest",
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "REPMEFocus-Logs",
+          "awslogs-region": "eu-central-1",
+          "awslogs-stream-prefix": "awslogs-REPMEFocusBackend-Service"
+        }
+      },
+      "essential": true
+    }
+  ]
+}

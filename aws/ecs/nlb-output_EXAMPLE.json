@@ -1,0 +1,30 @@
+{
+    "LoadBalancers": [
+        {
+            "LoadBalancerArn": "arn:aws:elasticloadbalancing:eu-central-1:575950781373:loadbalancer/net/REPMEFocus-NLB/cbe0808c4ad95992",
+            "DNSName": "REPMEFocus-NLB-cbe0808c4ad95992.elb.eu-central-1.amazonaws.com",
+            "CanonicalHostedZoneId": "Z3F0SRJ5LGBH90",
+            "CreatedTime": "2020-09-07T16:17:07.459000+00:00",
+            "LoadBalancerName": "REPMEFocus-NLB",
+            "Scheme": "internet-facing",
+            "VpcId": "vpc-02b589606137b5182",
+            "State": {
+                "Code": "provisioning"
+            },
+            "Type": "network",
+            "AvailabilityZones": [
+                {
+                    "ZoneName": "eu-central-1a",
+                    "SubnetId": "subnet-0466c024c12a772db",
+                    "LoadBalancerAddresses": []
+                },
+                {
+                    "ZoneName": "eu-central-1b",
+                    "SubnetId": "subnet-0fbe7d643bb5ed48c",
+                    "LoadBalancerAddresses": []
+                }
+            ],
+            "IpAddressType": "ipv4"
+        }
+    ]
+}

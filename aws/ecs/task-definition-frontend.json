@@ -1,0 +1,32 @@
+{
+  "family": "REPMEFocusFrontend",
+  "cpu": "256",
+  "memory": "512",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "executionRoleArn": "MY_CUSTOM_REFERENCE_ECS_SERVICE_ROLE_ARN",
+  "taskRoleArn": "MY_CUSTOM_REFERENCE_ECS_TASK_ROLE_ARN",
+  "containerDefinitions": [
+    {
+      "name": "REPMEFocusFrontend-Service",
+      "image": "575950781373.dkr.ecr.eu-central-1.amazonaws.com/focus/frontend:latest",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "http"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "REPMEFocus-Logs",
+          "awslogs-region": "eu-central-1",
+          "awslogs-stream-prefix": "awslogs-REPMEFocusFrontend-Service"
+        }
+      },
+      "essential": true
+    }
+  ]
+}

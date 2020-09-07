@@ -1,7 +1,7 @@
 import os
 from flask import Flask, jsonify, json, Response, request, render_template
 from flask_cors import CORS
-import model_data
+from model_data import ModelDataFetcher
 import json
 import pika
 
@@ -14,21 +14,23 @@ CORS(app)
 # The service basepath has a short response to ensure that health checks
 # sent to the service root will receive a healthy response.
 @app.route("/")
-def healthCheckResponse():
+def health_check_response():
     return jsonify({"message": "Empty basepath used for health check. Try /models instead."})
 
-# Returns all of the models in DynamoDB to be displayed on the website.
+# Returns all of the models in DynamoDB, to be displayed on the website.
+# The model data is fetched from the ModelDataFetcher which sends event
+# messages to RabbitMQ.
 @app.route("/models")
 def get_models():
-
-    model_data_fetcher = model_data.ModelDataFetcher()
+    model_data_fetcher = ModelDataFetcher()
     model_data_fetcher.get_all_models()
     flag = None
     while flag is None:
         flag = model_data_fetcher.fetched_read_model_data
     return render_template('index.html', data=flag['models'])
 
-
+# Sends an updateModel event to RabbitMQ when a button
+# to change the awesomeness is clicked
 def message_broker_trigger(awesomeness):
     if os.environ.get('AWS_APP_CONTEXT') == 'DEVELOPMENT_MACHINE':
         # Local testing RabbitMQ credentials
@@ -59,13 +61,13 @@ def message_broker_trigger(awesomeness):
         properties=pika.BasicProperties(content_type='application/json', delivery_mode=1))
     connection.close()
 
-
+# Route for the awesomeness True button
 @app.route("/message_broker_trigger_awesome_true")
 def awesomeness_true():
     message_broker_trigger(awesomeness=True)
     return 'OK'
 
-
+# Route for the awesomeness False button
 @app.route("/message_broker_trigger_awesome_false")
 def awesomeness_false():
     message_broker_trigger(awesomeness=False)

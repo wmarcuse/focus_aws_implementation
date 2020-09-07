@@ -23,8 +23,8 @@ class ExampleConsumer(object):
     """
     EXCHANGE = 'model_exchange'
     EXCHANGE_TYPE = 'topic'
-    QUEUE = 'awesomeness_crud_operations'
-    ROUTING_KEY = 'awesomeness.crud.key'
+    QUEUE = 'model_crud_operations'
+    ROUTING_KEY = 'dynamodb.model.crud'
 
     def __init__(self, amqp_url):
         """Create a new instance of the consumer class, passing in the AMQP
@@ -43,10 +43,13 @@ class ExampleConsumer(object):
         # In production, experiment with higher prefetch values
         # for higher consumer throughput
         self._prefetch_count = 1
-        self.callback_producer =
+        self.callback_producer = self.set_callback_producer()
 
     def set_callback_producer(self):
-        pika.
+        connection = pika.BlockingConnection(
+            parameters=pika.URLParameters(self._url)
+        )
+        return connection.channel()
 
     def connect(self):
         """This method connects to RabbitMQ, returning the connection handle.
@@ -264,9 +267,12 @@ class ExampleConsumer(object):
         if self._channel:
             self._channel.close()
 
-    def read_dynamodb_model_record(self, scope):
-        # create a DynamoDB client using boto3. Note that we create both client
-        # scenario's for local development and remote.
+    def read_dynamodb_model_record(self, scope, routing_key):
+        """
+        This method reads all DynamoDB records in the model database, and
+        sends this data back to RabbitMQ with the provided callback routing key
+        where the Frontend Service is now listening for.
+        """
         if scope != 'all':
             pass
         if os.environ.get('AWS_APP_CONTEXT') == 'DEVELOPMENT_MACHINE':
@@ -283,17 +289,22 @@ class ExampleConsumer(object):
         response = client.scan(
             TableName='REPMEFocusCustomTable'
         )
-
-        logging.info(response["Items"])
-
-        # loop through the returned models and add their attributes to a new dict
-        # that matches the JSON response structure expected by the frontend.
-        # model_list = get_model_data(response["Items"])
-        #
-        # return json.dumps(model_list)
-        return response
+        # Send the DynamoDB records back to the Frontend Service.
+        self.callback_producer.basic_publish(
+            exchange=self.EXCHANGE,
+            routing_key=routing_key,
+            body=json.dumps(response),
+            properties=pika.BasicProperties(content_type='application/json', delivery_mode=1)
+        )
 
     def update_dynamodb_model_record(self, context):
+        """
+        This method changes the two dummy database records' isThisAwesome
+        attribute to the provided context boolean.
+
+        :param context: The awesomeness boolean
+        :type context: bool
+        """
         if os.environ.get('AWS_APP_CONTEXT') == 'DEVELOPMENT_MACHINE':
             client = boto3.resource(
                 'dynamodb',
@@ -336,16 +347,17 @@ class ExampleConsumer(object):
         ###### THE MAGIC HAPPENS HERE ######
 
         parsed_message = json.loads(body)
-        if parsed_message['action'] == 'read':
-            record_data = self.read_dynamodb_model_record()
-        elif parsed_message['action'] == 'update':
+
+        # Check which CRUD event is the case and call corresponding CRUD method
+        if parsed_message['event'] == 'readModel':
+            self.read_dynamodb_model_record(
+                scope='all',
+                routing_key=parsed_message['context']['callback_routing_key']
+            )
+        elif parsed_message['event'] == 'updateModel':
             self.update_dynamodb_model_record(context=parsed_message['context']['awesomeness'])
 
-        awesomeness = parsed_message['awesomeness']
-
-
-
-        ###### THE MAGIC HAPPENS HERE ######
+        ###### // THE MAGIC HAPPENS HERE // ######
 
         self.acknowledge_message(basic_deliver.delivery_tag)
 

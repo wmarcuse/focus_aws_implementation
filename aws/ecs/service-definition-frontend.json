@@ -1,0 +1,30 @@
+{
+  "serviceName": "REPMEFocusFrontend-Service",
+  "cluster": "REPMEFocus-Cluster",
+  "launchType": "FARGATE",
+  "deploymentConfiguration": {
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 0
+  },
+  "desiredCount": 1,
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "assignPublicIp": "DISABLED",
+      "securityGroups": [
+        "sg-0be60785ed7cbaaa8"
+      ],
+      "subnets": [
+        "subnet-0415fc311b0bf6389",
+        "subnet-0099a1bbd905cb625"
+      ]
+    }
+  },
+  "taskDefinition": "REPMEFocusFrontend",
+  "loadBalancers": [
+    {
+      "containerName": "REPMEFocusFrontend-Service",
+      "containerPort": 8080,
+      "targetGroupArn": "arn:aws:elasticloadbalancing:eu-central-1:575950781373:targetgroup/REPMEFocus-TargetGroup/afdd20315e52e682"
+    }
+  ]
+}
