@@ -11,11 +11,11 @@
     "awsvpcConfiguration": {
       "assignPublicIp": "DISABLED",
       "securityGroups": [
-        "sg-0be60785ed7cbaaa8"
+        "MY_CUSTOM_REFERENCE_SECURITY_GROUP_ID"
       ],
       "subnets": [
-        "subnet-0415fc311b0bf6389",
-        "subnet-0099a1bbd905cb625"
+        "MY_CUSTOM_REFERENCE_PRIVATE_SUBNET_ONE",
+        "MY_CUSTOM_REFERENCE_PRIVATE_SUBNET_TWO"
       ]
     }
   },
@@ -24,7 +24,7 @@
     {
       "containerName": "REPMEFocusFrontend-Service",
       "containerPort": 8080,
-      "targetGroupArn": "arn:aws:elasticloadbalancing:eu-central-1:575950781373:targetgroup/REPMEFocus-TargetGroup/afdd20315e52e682"
+      "targetGroupArn": "MY_CUSTOM_REFERENCE_NLB_TARGET_GROUP_ARN"
     }
   ]
 }

@@ -298,13 +298,7 @@ class ExampleConsumer(object):
         )
 
     def update_dynamodb_model_record(self, context):
-        """
-        This method changes the two dummy database records' isThisAwesome
-        attribute to the provided context boolean.
-
-        :param context: The awesomeness boolean
-        :type context: bool
-        """
+        LOGGER.info('Started DynamoDB update operation')
         if os.environ.get('AWS_APP_CONTEXT') == 'DEVELOPMENT_MACHINE':
             client = boto3.resource(
                 'dynamodb',
@@ -328,6 +322,7 @@ class ExampleConsumer(object):
                     ':i': context
                 }
             )
+        LOGGER.info('Finished DynamoDB update operation')
 
     def on_message(self, _unused_channel, basic_deliver, properties, body):
         """Invoked by pika when a message is delivered from RabbitMQ. The
@@ -347,8 +342,6 @@ class ExampleConsumer(object):
         ###### THE MAGIC HAPPENS HERE ######
 
         parsed_message = json.loads(body)
-
-        # Check which CRUD event is the case and call corresponding CRUD method
         if parsed_message['event'] == 'readModel':
             self.read_dynamodb_model_record(
                 scope='all',
@@ -357,7 +350,7 @@ class ExampleConsumer(object):
         elif parsed_message['event'] == 'updateModel':
             self.update_dynamodb_model_record(context=parsed_message['context']['awesomeness'])
 
-        ###### // THE MAGIC HAPPENS HERE // ######
+        ###### THE MAGIC HAPPENS HERE ######
 
         self.acknowledge_message(basic_deliver.delivery_tag)
 
@@ -466,7 +459,7 @@ class ReconnectingExampleConsumer(object):
 
 
 def main():
-    logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
+    logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
     if os.environ.get('AWS_APP_CONTEXT') == 'DEVELOPMENT_MACHINE':
         # Local testing RabbitMQ credentials
         amqp_url = 'amqp://guest:guest@host.docker.internal'

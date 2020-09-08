@@ -34,13 +34,11 @@ def get_models():
 def message_broker_trigger(awesomeness):
     if os.environ.get('AWS_APP_CONTEXT') == 'DEVELOPMENT_MACHINE':
         # Local testing RabbitMQ credentials
-        credentials = pika.PlainCredentials('guest', 'guest')
-        parameters = pika.ConnectionParameters('host.docker.internal', credentials=credentials)
+        amqp_url = 'amqp://guest:guest@host.docker.internal'
     else:
         # CloudAMQP production RabbitMQ credentials
-        credentials = pika.PlainCredentials('rmmdazid', '9JK3bJRNEPAYz5sYFk8v3HQdbx7m-BFO')
-        parameters = pika.ConnectionParameters('sparrow.rmq.cloudamqp.com/rmmdazid', credentials=credentials)
-    connection = pika.BlockingConnection(parameters)
+        amqp_url = 'amqps://rmmdazid:9JK3bJRNEPAYz5sYFk8v3HQdbx7m-BFO@sparrow.rmq.cloudamqp.com/rmmdazid'
+    connection = pika.BlockingConnection(parameters=pika.URLParameters(amqp_url))
     channel = connection.channel()
     channel.exchange_declare(
         exchange="model_exchange",
