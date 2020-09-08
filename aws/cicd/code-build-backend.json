@@ -1,0 +1,27 @@
+{
+  "name": "REPMEFocusBackendService-CodeBuildProject",
+  "artifacts": {
+    "type": "no_artifacts"
+  },
+  "environment": {
+    "computeType": "BUILD_GENERAL1_SMALL",
+    "image": "aws/codebuild/standard:4.0",
+    "privilegedMode": true,
+    "environmentVariables": [
+      {
+        "name": "AWS_ACCOUNT_ID",
+        "value": "MY_CUSTOM_REFERENCE_ACCOUNT_ID"
+      },
+      {
+        "name": "AWS_DEFAULT_REGION",
+        "value": "eu-central-1"
+      }
+    ],
+    "type": "LINUX_CONTAINER"
+  },
+  "serviceRole": "MY_CUSTOM_REFERENCE_CODEBUILD_ROLE_ARN",
+  "source": {
+    "type": "CODECOMMIT",
+    "location": "https://git-codecommit.eu-central-1.amazonaws.com/v1/repos/REPMEFocusBackendService-Repository"
+  }
+}

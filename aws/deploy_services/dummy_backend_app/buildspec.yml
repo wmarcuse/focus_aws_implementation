@@ -18,23 +18,23 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t stockstream/frontend:latest .
+      - docker build -t focus/backend:latest .
       # Tag the built docker image using the appropriate Amazon ECR endpoint and relevant
       # repository for our service container. This ensures that when the docker push
       # command is executed later, it will be pushed to the appropriate repository.
-      - docker tag stockstream/frontend:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/stockstream/frontend:latest
+      - docker tag focus/backend:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/focus/backend:latest
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image..
       # Push the image to ECR.
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/stockstream/frontend:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/focus/backend:latest
       - echo Completed pushing Docker image. Deploying Docker image to AWS Fargate on `date`
       # Create a artifacts file that contains the name and location of the image
       # pushed to ECR. This will be used by AWS CodePipeline to automate
       # deployment of this specific container to Amazon ECS.
-      - printf '[{"name":"StockStream-Service","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/stockstream/frontend:latest > imagedefinitions.json
+      - printf '[{"name":"REPMEFocusBackend-Service","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/focus/backend:latest > backend-imagedefinitions.json
 artifacts:
-  # Indicate that the created imagedefinitions.json file created on the previous
+  # Indicate that the created backend-imagedefinitions.json file created on the previous
   # line is to be referenceable as an artifact of the build execution job.
-  files: imagedefinitions.json
+  files: backend-imagedefinitions.json
