@@ -75,7 +75,8 @@ class ModelDataFetcher:
         queue_name = 'callback_{ID}'.format(ID=specific_callback_id)
         channel_c.queue_declare(
             queue=queue_name,
-            auto_delete=False
+            # Delete the queue after the callback tunnel served its purpose
+            auto_delete=True
         )
 
         # Bind the callback queue to the callback id and exchange
